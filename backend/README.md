@@ -49,7 +49,7 @@ backend/
 
 ---
 ![image-alt](https://github.com/NeelakshiSolanki/E-learning-Management-System/blob/ad6e2771131fa6dd30e712d5099c8d6fd434e6c3/backend/Screenshot%202025-07-22%20234439.png)
-
+![image-alt](https://github.com/NeelakshiSolanki/E-learning-Management-System/blob/6414703366bffb6003727230b5a1896b63f8ad60/Screenshot%202025-07-22%20234511.png)
 
 ## 📌 Features
 
