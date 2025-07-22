@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | E-Learning Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(to bottom right, #dff1ff, #fefefe);
+      overflow: hidden;
+      position: relative;
+    }
+
+
+    .circle {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(270deg, #6a11cb, #2575fc, #43e97b, #38f9d7);
+      border-radius: 50%;
+      animation: float 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); opacity: 0.4; }
+      50% { transform: translateY(-150px) translateX(150px); opacity: 0.2; }
+      100% { transform: translateY(0) translateX(0); opacity: 0.4; }
+    }
+
+  
+    .content-wrapper {
+  display: flex;
+  justify-content: center;       
+  align-items: center;
+  height: calc(100vh - 80px);      
+  width: 100%;
+  padding-right: 8%;              
+  position: relative;
+  z-index: 2;
+}
+
+    .login-container {
+      background: transparent;
+      padding: 35px 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      display: block;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      background: transparent;
+    }
+
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 0 18px;
+      font-size: 14px;
+    }
+
+    .remember-forgot a {
+      color: #6a11cb;
+      text-decoration: none;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(270deg, #6a11cb, #2575fc, #43e97b, #38f9d7);
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #333;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      z-index: 9999;
+    }
+
+    .popup.success { background: linear-gradient(to right, #6a11cb, #2575fc); }
+    .popup.error { background: linear-gradient(to right, #ff416c, #ff4b2b); }
+
+    @media (max-width: 480px) {
+      .login-container {
+        margin: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  
+  <div id="navbar-placeholder"></div>
+
+
+  <div id="circles"></div>
+
+ 
+  <div class="content-wrapper">
+    <div class="login-container">
+      <h2>Login to E-Learning Hub</h2>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="role">Login as</label>
+          <select id="role" required>
+            <option value="" disabled selected>Select Role</option>
+            <option value="user">User</option>  
+            <option value="admin">Admin</option> 
+
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+
+      
+
+
+        <button type="submit" class="login-btn">Login</button>
+
+        <p style="text-align: center; margin-top: 16px;">
+          Don't have an account? <a href="Register.html" style="color:#6a11cb;">Register here</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+
+  <script>
+  function showPopup(msg, success = true) {
+    const popup = document.createElement("div");
+    popup.className = "popup " + (success ? "success" : "error");
+    popup.textContent = msg;
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 3000);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+   
+    fetch("navbar.html")
+      .then((res) => res.text())
+      .then((data) => {
+        document.getElementById("navbar-placeholder").innerHTML = data;
+      })
+      .catch((err) => console.error("Navbar load error:", err));
+
+    const container = document.getElementById("circles");
+    for (let i = 0; i < 20; i++) {
+      const circle = document.createElement("div");
+      circle.className = "circle";
+      circle.style.top = Math.random() * 100 + "vh";
+      circle.style.left = Math.random() * 100 + "vw";
+      const size = Math.random() * 30 + 30;
+      circle.style.width = size + "px";
+      circle.style.height = size + "px";
+      circle.style.animationDuration = (10 + Math.random() * 15) + "s";
+      container.appendChild(circle);
+    }
+
+    
+    document.getElementById("login-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      if (!role) {
+        showPopup("Please select a role", false);
+        return;
+      }
+
+      const loginData = { email, password, role };
+
+      try {
+        const response = await fetch("http://localhost:8080/api/users/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(loginData),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          showPopup(errorText || "Login failed", false);
+          return;
+        }
+
+        const user = await response.json();
+
+        if (!user.profileImage || user.profileImage.trim() === "") {
+          user.profileImage = "https://via.placeholder.com/40";
+        }
+
+       
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        localStorage.setItem("username", user.username || user.name);
+        localStorage.setItem("userImage", user.profileImage);
+        localStorage.setItem("userRole", user.role);
+
+        showPopup("Login successful ✅", true);
+
+       
+        setTimeout(() => {
+          if (user.role === "admin") {
+            window.location.href = "/Admin-dashboard.html";
+          } else {
+            window.location.href = "/index.html"; 
+          }
+        }, 1000);
+      } catch (err) {
+        console.error("Login error", err);
+        showPopup("An error occurred during login", false);
+      }
+    });
+  });
+</script>
+
+
+</body>
+</html>

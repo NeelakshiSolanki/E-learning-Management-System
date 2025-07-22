@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Users</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fceabb, #3474f5b0);
+      overflow: auto;
+      position: relative;
+    }
+
+    .bubbles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bubbles span {
+      position: absolute;
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.3);
+      animation: animate 10s linear infinite;
+      bottom: -150px;
+      border-radius: 50%;
+    }
+
+    @keyframes animate {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-1000px) scale(0.5); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 40px;
+      color: #3474f5b0;
+      font-size: 2.2rem;
+      font-weight: bold;
+      z-index: 2;
+      position: relative;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: transparent;
+      border-radius: 15px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #f0f0f0b6;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #aaa;
+      color: #222;
+    }
+
+    th {
+      background-color: #e2e2e2c9;
+      color: #333;
+    }
+
+    button {
+      background-color: #3474f5b0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2851b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Bubble Background -->
+  <div class="bubbles">
+    <span style="left:10%; animation-delay: 0s;"></span>
+    <span style="left:20%; animation-delay: 2s;"></span>
+    <span style="left:25%; animation-delay: 4s;"></span>
+    <span style="left:40%; animation-delay: 0s;"></span>
+    <span style="left:55%; animation-delay: 3s;"></span>
+    <span style="left:70%; animation-delay: 5s;"></span>
+    <span style="left:80%; animation-delay: 2s;"></span>
+    <span style="left:90%; animation-delay: 4s;"></span>
+    <span style="left:95%; animation-delay: 0s;"></span>
+  </div>
+
+  <h2>👤 Manage Users</h2>
+
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTable">
+        <tr><td colspan="4" style="text-align:center; color: #888;">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    fetch("http://localhost:8080/admin/users")
+      .then(response => response.json())
+      .then(users => {
+        const tbody = document.getElementById("userTable");
+        tbody.innerHTML = "";
+        if (!users.length) {
+          tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No users found</td></tr>";
+          return;
+        }
+        users.forEach(user => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.role}</td>
+            <td>
+              <button onclick="deleteUser('${user.id}')">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+
+    function deleteUser(userId) {
+      if (!confirm("Are you sure you want to delete this user?")) return;
+
+      fetch(`http://localhost:8080/admin/delete-user/${userId}`, {
+        method: 'DELETE'
+      }).then(() => location.reload());
+    }
+  </script>
+</body>
+</html>

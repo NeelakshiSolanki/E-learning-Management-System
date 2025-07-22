@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Enrollments</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fceabb, #3474f5b0);
+      overflow: auto;
+    }
+
+    .bubbles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bubbles span {
+      position: absolute;
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.3);
+      animation: animate 10s linear infinite;
+      bottom: -150px;
+      border-radius: 50%;
+    }
+
+    @keyframes animate {
+      0% {
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        transform: translateY(-1000px) scale(0.5);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #3474f5b0;
+      margin-top: 40px;
+    }
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 900px;
+  margin: 30px auto; 
+  padding: 30px;
+  background-color: transparent;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+}
+
+
+    table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  background: #f0f0f0b6;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #aaa;
+      color: #222;
+    }
+
+    th {
+      background-color: #e2e2e2c9;
+      color: #333;
+    }
+
+    button {
+      background-color: #3474f5b0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2851b3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Bubble Background -->
+  <div class="bubbles">
+    <span style="left:10%; animation-delay: 0s;"></span>
+    <span style="left:20%; animation-delay: 2s;"></span>
+    <span style="left:25%; animation-delay: 4s;"></span>
+    <span style="left:40%; animation-delay: 0s;"></span>
+    <span style="left:55%; animation-delay: 3s;"></span>
+    <span style="left:70%; animation-delay: 5s;"></span>
+    <span style="left:80%; animation-delay: 2s;"></span>
+    <span style="left:90%; animation-delay: 4s;"></span>
+    <span style="left:95%; animation-delay: 0s;"></span>
+  </div>
+
+  <h2>📋 Manage Enrollments</h2>
+
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Enrollment ID</th>
+          <th>User ID</th>
+          <th>Course ID</th>
+          <th>Enrolled On</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="enrollmentBody">
+        <tr><td colspan="5" style="text-align:center; color: #888;">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadEnrollments() {
+      try {
+        const res = await fetch("http://localhost:8080/api/enrollments");
+        const data = await res.json();
+
+        const tableBody = document.getElementById("enrollmentBody");
+        tableBody.innerHTML = "";
+
+        if (!data.length) {
+          tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No enrollments found</td></tr>";
+          return;
+        }
+
+        data.forEach(enroll => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+            <td>${enroll.id}</td>
+            <td>${enroll.userId}</td>
+            <td>${enroll.courseId}</td>
+            <td>${new Date(enroll.enrolledOn).toLocaleDateString()}</td>
+            <td><button onclick="unenroll('${enroll.id}')">Unenroll</button></td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        console.error("Failed to fetch enrollments", err);
+        document.getElementById("enrollmentBody").innerHTML =
+          "<tr><td colspan='5' style='text-align:center;color:red;'>Failed to load data</td></tr>";
+      }
+    }
+
+    async function unenroll(id) {
+      if (!confirm("Are you sure you want to unenroll this user?")) return;
+
+      try {
+        const res = await fetch(`http://localhost:8080/api/enrollments/${id}`, {
+          method: "DELETE",
+        });
+
+        if (res.ok) {
+          alert("Unenrolled successfully");
+          loadEnrollments();
+        } else {
+          alert("Unenrollment failed");
+        }
+      } catch (err) {
+        alert("Server error while unenrolling");
+        console.error(err);
+      }
+    }
+
+    loadEnrollments();
+  </script>
+</body>
+</html>

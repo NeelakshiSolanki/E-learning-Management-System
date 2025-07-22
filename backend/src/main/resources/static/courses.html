@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Learning Hub | Courses</title>
+
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <style>
+    :root {
+      --swiper-navigation-size: 40px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #dff1ff, #ffffff);
+      color: #333;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin: 2rem 0;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .swiper {
+      width: 100%;
+      height: 300px;
+      margin-bottom: 2rem;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+ .swiper-button-next,
+.swiper-button-prev {
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: var(--swiper-navigation-size);
+  height: var(--swiper-navigation-size);
+}
+
+    /* Search */
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    #search-input {
+      width: 60%;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #aaa;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Grid */
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .course-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow:
+        0 4px 30px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1000px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      position: relative;
+    }
+
+    .course-card:hover {
+      transform: rotateY(8deg) scale(1.05);
+      box-shadow: 0 20px 40px rgba(106, 17, 203, 0.25);
+    }
+
+    .course-card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      transition: transform 0.4s ease;
+    }
+
+    .course-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .course-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .course-card p {
+      font-size: 0.95rem;
+      color: #444;
+      margin-bottom: 1rem;
+    }
+
+    .course-rating {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #f39c12;
+    }
+
+    @media (max-width: 600px) {
+      #search-input {
+        width: 90%;
+      }
+      h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+ <div id="navbar-placeholder"></div>
+
+  <h2>Explore Our Courses</h2>
+
+
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide"><img src="https://images.pexels.com/photos/4443160/pexels-photo-4443160.jpeg" alt="Slide 1"></div>
+      <div class="swiper-slide"><img src="https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg" alt="Slide 2"></div>
+      <div class="swiper-slide"><img src="https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg" alt="Slide 3"></div>
+    </div>
+  
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="🔍 Search courses..." />
+  </div>
+
+  <div class="course-grid" id="course-container">
+    
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  
+  <script>
+   const swiper = new Swiper(".mySwiper", {
+  loop: true,
+  autoplay: {
+    delay: 3500,
+    disableOnInteraction: false,
+  },
+});
+
+  </script>
+
+
+  <script src="script.js"></script>
+    <div id="footer-placeholder"></div>
+</body>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  fetch("http://localhost:8080/api/courses")
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch courses");
+      }
+      return res.json();
+    })
+    .then(data => {
+      const container = document.getElementById("course-container");
+
+      if (!data.length) {
+        container.innerHTML = "<p style='text-align:center;'>No courses available</p>";
+        return;
+      }
+
+      data.forEach(course => {
+        const card = document.createElement("div");
+        card.className = "course-card";
+      card.innerHTML = `
+  <img src="${course.thumbnail || 'https://via.placeholder.com/400x200?text=Course+Image'}" alt="Course Image">
+  <h3>${course.title || "Untitled Course"}</h3>
+  <p>${course.description || "No description available."}</p>
+  <div class="course-rating">⭐ ${course.rating || "4.5"}</div>
+  <button class="view-details-btn" onclick="viewDetails('${course._id}')">View Details</button>
+
+
+`;
+
+
+        container.appendChild(card);
+      });
+    })
+    .catch(err => {
+      console.error("Error loading courses:", err);
+      document.getElementById("course-container").innerHTML =
+        "<p style='text-align:center;color:red;'>Unable to load courses. Please try again later.</p>";
+    });
+});
+const searchInput = document.getElementById("search-input");
+
+
+  searchInput.addEventListener("input", function () {
+    const searchTerm = this.value.toLowerCase();
+    const courseCards = document.querySelectorAll(".course-card");
+
+    courseCards.forEach(card => {
+      const title = card.querySelector("h3").textContent.toLowerCase();
+      const description = card.querySelector("p").textContent.toLowerCase();
+
+      if (title.includes(searchTerm) || description.includes(searchTerm)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+    function viewDetails(courseId) {
+  
+    window.location.href = `course-detail.html?id=${courseId}`;
+  }
+</script>
+</html>

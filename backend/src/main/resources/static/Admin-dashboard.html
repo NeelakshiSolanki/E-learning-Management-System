@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | E-Learning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(120deg, #feffff, #f4f6f8);
+      color: rgba(19, 3, 6, 0.756);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(-45deg, #8e2de2, #4a00e0, #00c9ff, #ff00cc);
+      background-size: 400% 400%;
+      animation: gradientGlow 8s ease infinite;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes gradientGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.8rem;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      position: relative;
+      padding: 0.3rem 0.6rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links li a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: #fff;
+      transition: 0.4s ease-in-out;
+    }
+
+    .nav-links li a:hover::before {
+      width: 100%;
+    }
+
+    .nav-links li a:hover {
+      color: #ffeb3b;
+      text-shadow: 0 0 8px #ffeb3b;
+      transform: scale(1.05);
+    }
+
+    .btn-login {
+      background: white;
+      color: #4a00e0;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #fff;
+    }
+
+    .btn-login:hover {
+      background: #ffeb3b;
+      color: #111;
+      box-shadow: 0 0 15px #ffeb3b, 0 0 25px #fff;
+      transform: scale(1.05);
+    }
+
+    
+    .container {
+      flex: 1;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .container h2 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-buttons {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-buttons button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      background: #2bb1ff;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      box-shadow: 0 4px 12px rgba(88, 108, 211, 0.4);
+    }
+
+    .dashboard-buttons button:hover {
+      background: #41efffc7;
+    }
+    .stats-section {
+  padding: 40px;
+  background: #f5f6f6;
+  color: rgb(24, 16, 16);
+  text-align: center;
+}
+
+.stats-section h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.stats-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background:linear-gradient(-45deg, #d4ced8, #7b6f928c, #a7ced8, #ded3dc9d);
+  padding: 30px;
+  border-radius: 20px;
+  width: 250px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgb(253, 253, 253);
+}
+
+.stat-card h3 {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #0c5567cc;
+}
+
+.stat-card p {
+  font-size: 16px;
+}
+
+
+   
+    footer {
+      background: linear-gradient(-45deg, #8e2de2, #4a00e0, #00c9ff, #ff00cc);
+      background-size: 400% 400%;
+      animation: gradientGlow 8s ease infinite;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    footer span {
+      font-weight: 600;
+      color: #ffeb3b;
+    }
+
+    @media screen and (max-width: 768px) {
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .btn-login {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+
+
+
+  <nav class="navbar">
+    <div class="logo">E-Learning</div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="Admin-dashboard.html">Dashboard</a></li>
+        <li><a href="add-course.html">Add Course</a></li>
+        <li><a href="manage-users.html">Users</a></li>
+        <li><a href="index.html">Logout</a></li>
+      </ul>
+      <a href="profile.html" class="btn-login">Profile</a>
+    </div>
+  </nav>
+   <div class="container">
+    <h2>Welcome, Admin!</h2>
+    <p>Manage courses, users, and view analytics here.</p>
+    <div class="dashboard-buttons">
+<button onclick="location.href='add-course.html'">➕ Add Course</button>
+ <button onclick="location.href='manage-users.html'">👥 Manage Users</button>
+ <button onclick="location.href='manage-enrollments.html'">📋 Manage Enrollments</button>
+</div>
+
+  </div>
+  <section class="stats-section">
+  <h2>Admin Dashboard Overview</h2>
+  <div class="stats-cards">
+    <div class="stat-card">
+      <h3 id="userCount">0</h3>
+      <p>Total Registered Users</p>
+    </div>
+    <div class="stat-card">
+      <h3 id="courseCount">0</h3>
+      <p>Total Courses Available</p>
+    </div>
+  </div>
+</section>
+
+ 
+ 
+  <footer>
+    &copy; 2025 <span>E-Learning Hub</span> | Admin Panel
+  </footer>
+  <script>
+  fetch("http://localhost:8080/admin/stats")
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("userCount").textContent = data.totalUsers;
+      document.getElementById("courseCount").textContent = data.totalCourses;
+    })
+    .catch(error => console.error("Error fetching stats:", error));
+</script>
+
+
+</body>
+</html>

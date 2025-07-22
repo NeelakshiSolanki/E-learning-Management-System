@@ -1,0 +1,10 @@
+# Ignore backend/target directory (Java build files)
+/backend/target/
+
+# Ignore IDE folders
+.idea/
+*.iml
+
+# Ignore system files
+Thumbs.db
+.DS_Store

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Profile | E-Learning Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(to bottom right, #dff1ff, #fefefe);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .circle {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(270deg, #6a11cb, #2575fc, #43e97b, #38f9d7);
+      border-radius: 50%;
+      animation: float 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); opacity: 0.4; }
+      50% { transform: translateY(-150px) translateX(150px); opacity: 0.2; }
+      100% { transform: translateY(0) translateX(0); opacity: 0.4; }
+    }
+
+    .profile-container {
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      max-width: 500px;
+      margin: 80px auto 30px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-align: center;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #6a11cb;
+      cursor: pointer;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.8);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .enrolled-courses {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .course-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    #navbar-placeholder, #footer-placeholder {
+      z-index: 1000;
+    }
+
+    @media (max-width: 600px) {
+      .profile-container {
+        margin: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+<div id="navbar-placeholder"></div>
+
+
+<div id="circles"></div>
+
+
+<div class="profile-container">
+  <h2>Your Profile</h2>
+  <img id="profileImage" class="profile-pic" src="https://via.placeholder.com/120" alt="Profile Pic" />
+  <input type="file" id="fileInput" accept="image/*" />
+  <input type="text" id="name" placeholder="Your name" />
+  <input type="email" id="email" placeholder="Your email" disabled />
+  <input type="password" id="password" placeholder="Change password (optional)" />
+  <button class="btn" id="saveBtn">Save Changes</button>
+
+
+</div>
+
+
+<div class="enrolled-courses">
+  <h3>Your Enrolled Courses</h3>
+  <div id="enrolledCoursesContainer"></div>
+</div>
+
+
+<div id="footer-placeholder"></div>
+
+
+<script>
+
+  function loadComponent(id, file) {
+    fetch(file)
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById(id).innerHTML = html;
+      })
+      .catch(err => console.error(`Error loading ${file}:`, err));
+  }
+
+  loadComponent("navbar-placeholder", "navbar.html");
+  loadComponent("footer-placeholder", "footer.html");
+
+ 
+  const bg = document.getElementById("circles");
+  for (let i = 0; i < 20; i++) {
+    const circle = document.createElement("div");
+    circle.className = "circle";
+    circle.style.top = Math.random() * 100 + "vh";
+    circle.style.left = Math.random() * 100 + "vw";
+    const size = Math.random() * 30 + 30;
+    circle.style.width = size + "px";
+    circle.style.height = size + "px";
+    circle.style.animationDuration = (10 + Math.random() * 15) + "s";
+    bg.appendChild(circle);
+  }
+
+ 
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (!user || !(user._id || user.id)) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+  }
+
+  const nameField = document.getElementById("name");
+  const emailField = document.getElementById("email");
+  const passwordField = document.getElementById("password");
+  const profileImage = document.getElementById("profileImage");
+  const fileInput = document.getElementById("fileInput");
+
+  nameField.value = user.name || "";
+  emailField.value = user.email || "";
+  profileImage.src = user.profileImage || "https://via.placeholder.com/120";
+
+ 
+  profileImage.addEventListener("click", () => fileInput.click());
+
+  let newBase64Image = user.profileImage || "";
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        newBase64Image = reader.result;
+        profileImage.src = newBase64Image;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+  const username = localStorage.getItem("username"); 
+  
+
+  if (username) {
+    document.getElementById("usernameDisplay").textContent = username;
+  }
+
+  if (imageUrl) {
+    document.getElementById("profilePic").src = imageUrl;
+  }
+});
+
+  
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    const updatedUser = {
+      name: nameField.value,
+      email: user.email,
+      profileImage: newBase64Image
+    };
+
+    const newPassword = passwordField.value.trim();
+    if (newPassword.length > 0) updatedUser.password = newPassword;
+
+    try {
+      const res = await fetch(`http://localhost:8080/api/users/update/${user._id || user.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedUser)
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        localStorage.setItem("loggedInUser", JSON.stringify(updated));
+        alert("✅ Profile updated!");
+        location.reload();
+      } else {
+        const err = await res.text();
+        alert("❌ Failed to update profile.\n" + err);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("⚠️ Error updating profile.");
+    }
+  });
+
+
+  async function loadEnrolledCourses() {
+    try {
+      const res = await fetch(`http://localhost:8080/api/enrollments/user/${user._id || user.id}/courses`);
+      const courses = await res.json();
+      const container = document.getElementById("enrolledCoursesContainer");
+      container.innerHTML = "";
+
+      if (!courses.length) {
+        container.innerHTML = "<p>You haven't enrolled in any courses yet.</p>";
+        return;
+      }
+
+      courses.forEach(course => {
+        const div = document.createElement("div");
+        div.className = "course-card";
+        div.innerHTML = `
+          <h4>${course.title}</h4>
+          <p>${course.description?.substring(0, 80) || "No description"}...</p>
+          <strong>Instructor:</strong> ${course.instructor || "N/A"}<br/>
+          <strong>Price:</strong> ${course.price === 0 || course.price === "Free" ? "Free" : "₹" + course.price}
+        `;
+        container.appendChild(div);
+      });
+    } catch (err) {
+      console.error("Error loading enrolled courses:", err);
+    }
+  }
+
+  loadEnrolledCourses();
+</script>
+</body>
+</html> 
