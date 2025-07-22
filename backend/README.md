@@ -48,6 +48,8 @@ backend/
    `http://localhost:8080/`
 
 ---
+![image-alt](https://github.com/NeelakshiSolanki/E-learning-Management-System/blob/ad6e2771131fa6dd30e712d5099c8d6fd434e6c3/backend/Screenshot%202025-07-22%20234439.png)
+
 
 ## 📌 Features
 
