@@ -82,7 +82,7 @@ backend/
 
 ## 🛠️ Future Scope
 
-- Admin Panel for Course Management  
+- Conduct Quizs
 - Payment Gateway Integration  
 - Email Notifications
 
